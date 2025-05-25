@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz/data/questions.dart';
-import 'package:quiz/start_screen.dart';
 import 'package:quiz/Questions_Summery.dart';
 
 class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key, required this.answersChosen});
+  const ResultScreen({super.key, required this.answersChosen, required this.onTap});
+
+  final void Function() onTap;
 
   List<Map<String,Object>> createSammery() {
     List<Map<String,Object>> summery = [];
@@ -27,11 +27,24 @@ class ResultScreen extends StatelessWidget {
   final List<String> answersChosen;
   @override
   Widget build(context) {
-    var summery = createSammery();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        QuestionsSummery(summeryData: summery,)
-          ]);
+    final summery = createSammery();
+    final numOfQuestions = questions.length;
+    final numOfCorrectAns = summery.where((data) {
+      return data['correct_answer'] == data['user_answer'];
+    }).length;
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('You answerd $numOfCorrectAns out of $numOfQuestions questions correctly!', style: TextStyle(
+            color: Colors.white,
+          ),),
+          SizedBox(height: 15,),
+          QuestionsSummery(summeryData: summery,),
+          TextButton(onPressed: onTap, child: Text('Restart Quiz', style: TextStyle(
+            color: Colors.white
+          ),)),
+            ]),
+    );
   }
 }

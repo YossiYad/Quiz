@@ -18,6 +18,13 @@ class _Quiz extends State<Quiz> {
   List<String> answersChosen = [];
   var correctScreen = 'start_screen';
 
+  void restartQuiz() {
+    setState(() {
+      answersChosen = [];
+      correctScreen = 'start_screen';
+    });
+  }
+
   void switchScreens(){
     setState(() {
       correctScreen = 'Questions_Screen';
@@ -29,7 +36,6 @@ class _Quiz extends State<Quiz> {
 
     if(answersChosen.length == questions.length){
       setState(() {
-        answersChosen = [];
         correctScreen = 'Result_Screen';
       });
     }
@@ -44,7 +50,11 @@ class _Quiz extends State<Quiz> {
     }
 
     else if(correctScreen == 'Result_Screen'){
-      screenWidget = ResultScreen(answersChosen: answersChosen);
+      screenWidget = ResultScreen(answersChosen: answersChosen, onTap: restartQuiz,);
+    }
+
+    else{
+      screenWidget = StartScreen(switchScreens);
     }
 
     return MaterialApp(
